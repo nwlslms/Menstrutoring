@@ -37,7 +37,7 @@ void printCalendar(int bulan, int tahun) {
     }
 
     enum Hari hari = awalBulan(1, bulan, tahun);
-    printf("%d - %s - %d\n", harian[bulan-1], bulanan[bulan-1], tahun);
+    printf("%s - %d\n", bulanan[bulan-1], tahun);
     printf("===========================\n");
     printf("AHD SEN SEL RAB KAM JUM SAB\n");
     for (int i = 0; i < hari; i++) {
@@ -76,8 +76,8 @@ void menu() {
     do {
         system("CLS");
         FILE *rf = fopen("user.txt", "r");
-        printf("M E N S T R U T O R I N G\n");
-        printf("=========================\n");
+        printf("P E R I O N O T E S\n");
+        printf("===========================\n");
         if (rf == NULL) {
             printf("1. Buat akun\n2. Exit\n[?] ");
             cmd = getch();
@@ -91,19 +91,19 @@ void menu() {
             cmd = getch();
             switch(cmd) {
                 case '1': fclose(rf);Login(); break;
-                case '2': fclose(rf);forgotPass(); cmd = '1'; break;
+                case '2': fclose(rf);forgotPass(); break;
                 case '3': break;
                 default: break;
             }
         }
         fclose(rf);
-    } while (cmd == '1');
+    } while (cmd != '3');
 }
 
 void createAccount() {
     system("CLS");
-    printf("M E N S T R U T O R I N G\n");
-    printf("=========================\n");
+    printf("P E R I O N O T E S\n");
+    printf("===========================\n");
     printf("[!]Username: ");
     char usn[21];
     scanf("%s", usn);
@@ -143,8 +143,8 @@ void Login() {
     fclose(rf);
     while (kesempatan > 0) {
         system("CLS");
-        printf("M E N S T R U T O R I N G\n");
-        printf("=========================\n");
+        printf("P E R I O N O T E S\n");
+        printf("===========================\n");
         printf("[!] Masukkan username: ");
         char nama[21], pass[21];
         scanf("%s", nama);
@@ -165,8 +165,8 @@ void Login() {
 
 void forgotPass() {
     system("CLS");
-    printf("M E N S T R U T O R I N G\n");
-    printf("=========================\n");
+    printf("P E R I O N O T E S\n");
+    printf("===========================\n");
     printf("[!] Masukkan username: ");
     char nama[21];
     scanf("%20s", nama);
@@ -177,7 +177,7 @@ void forgotPass() {
     int tanggal, bulan, tahun, umur, awal;
 
     FILE *rwf = fopen("user.txt", "r");
-    fscanf(rwf, "%*[^#]#%*s");
+    fscanf(rwf, "%*[^#]#%s\n");
     fscanf(rwf, "%d#%d#%d\n", &tanggal, &bulan, &tahun);
     fscanf(rwf, "%d#%d", &umur, &awal);
     fclose(rwf);
@@ -199,8 +199,8 @@ void panelUtama() {
     char cmd;
     do {
         system("CLS");
-        printf("M E N S T R U T O R I N G\n");
-        printf("=========================\n");
+        printf("P E R I O N O T E S\n");
+        printf("===========================\n");
         printf("1. Monitor\n2. Logout\n[?] ");
         cmd = getch();
         switch(cmd) {
@@ -227,18 +227,33 @@ void panelUtama() {
 }
 
 void monitor(int tahun) {
-    int cmd;
+    char cmd;
+    int bulan = 1;
     do {
         system("CLS");
-        printf("M E N S T R U T O R I N G\n");
-        printf("=========================\n");
-        printf("1. Januari\n2. Februari\n3. Maret\n4. April\n5. Mei\n6. Juni\n7. Juli\n8. Agustus\n9. September\n10. Oktober\n11. November\n12. Desember\n0. Kembali\n[?] ");
-        scanf("%d", &cmd);
+        printf("P E R I O N O T E S\n");
+        printf("===========================\n");
+        printCalendar(bulan, tahun);
+        printf("1. Catat\n2. exit\n[!] a / d / <- / -> untuk pindah bulan\n[?] ");
+        cmd = getch();
+        if(cmd == '1') {
 
-        if (cmd >= 1 && cmd <= 12) {
-            system("CLS");
-            printCalendar(cmd, tahun);
-            system("PAUSE");
+        } else if (cmd == '2') {
+            
+        } else if (cmd == 'a' || cmd == 75 || cmd == 'A') {
+            if (bulan == 1) {
+                bulan = 1;
+            } else {
+                bulan--;
+            }
+        } else if (cmd == 'd' || cmd == 77 || cmd == 'D') {
+            if (bulan == 12) {
+                bulan = 12;
+            } else {
+                bulan++;
+            }
+        } else {
+
         }
-    } while (cmd != 0);
+    } while (cmd != '2');
 }
