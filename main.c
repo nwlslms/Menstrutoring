@@ -46,7 +46,9 @@ void printCalendar(int bulan, int tahun) {
     for (int i = 1; i <= harian[bulan-1]; i++) {
         printf("%3d ", i);
         if ((i + hari) % 7 == 0) {
-            printf("\n");
+            printf("\n\n");
+        } else if (i == harian[bulan-1]) {
+            printf("\n\n");
         }
     }
     printf("===========================\n");
@@ -60,6 +62,10 @@ void Login();
 void forgotPass();
 
 //
+void panelUtama();
+int tahunAnc;
+int bulanAnc;
+void monitor(int tahun);
 int main () {
     menu();
     return 0;
@@ -96,6 +102,8 @@ void menu() {
 
 void createAccount() {
     system("CLS");
+    printf("M E N S T R U T O R I N G\n");
+    printf("=========================\n");
     printf("[!]Username: ");
     char usn[21];
     scanf("%s", usn);
@@ -103,7 +111,7 @@ void createAccount() {
     char pass[21];
     scanf("%s", pass);
     printf("[+] Lengkapi Informasi tambahan\n");
-    printf("[!] Tanggal lahir [dd/mm/yy]: ");
+    printf("[!] Tanggal lahir [dd/mm/yyyy]: ");
     int tanggal, bulan, tahun;
     scanf("%d/%d/%d", &tanggal, &bulan, &tahun);
     printf("[!] Umur saat ini: ");
@@ -112,11 +120,17 @@ void createAccount() {
     printf("[!] Umur pertama kali menstruasi: ");
     int awal;
     scanf("%d", &awal);
+    int buatBulan, buatTahun;
+    printf("[!] Waktu pembuatan akun [mm/yyyy]: ");
+    scanf("%d/%d", &buatBulan, &buatTahun);
     printf("[!] Simpan informasi berikut untuk masuk:\nUsername: %s\nPassword: %s\n", usn, pass);
     FILE *wf = fopen("user.txt", "w");
     fprintf(wf, "%s#%s\n", usn, pass);
     fprintf(wf, "%d#%d#%d\n", tanggal, bulan, tahun);
     fprintf(wf, "%d#%d", umur, awal);
+    fclose(wf);
+    wf = fopen("data.txt", "w");
+    fprintf(wf, "%d-%d\n", buatBulan, buatTahun);
     fclose(wf);
     system("PAUSE");
 }
@@ -129,6 +143,8 @@ void Login() {
     fclose(rf);
     while (kesempatan > 0) {
         system("CLS");
+        printf("M E N S T R U T O R I N G\n");
+        printf("=========================\n");
         printf("[!] Masukkan username: ");
         char nama[21], pass[21];
         scanf("%s", nama);
@@ -136,8 +152,7 @@ void Login() {
         scanf("%s", pass);
         if (strcmp(username, nama) == 0 && strcmp(password, pass) == 0) {
             printf("[+] Berhasil masuk!\n");
-
-            system("PAUSE");
+            panelUtama();
             break;
         } else {
             kesempatan--;
@@ -150,6 +165,8 @@ void Login() {
 
 void forgotPass() {
     system("CLS");
+    printf("M E N S T R U T O R I N G\n");
+    printf("=========================\n");
     printf("[!] Masukkan username: ");
     char nama[21];
     scanf("%20s", nama);
@@ -173,4 +190,55 @@ void forgotPass() {
 
     printf("[!] Simpan informasi berikut:\nUsername: %s\nPassword baru: %s\n", nama, password);
     system("PAUSE");
+}
+
+void panelUtama() {
+    FILE *rf = fopen("data.txt", "r");
+    fscanf(rf, "%d-%d\n", &bulanAnc, &tahunAnc);
+    fclose(rf);
+    char cmd;
+    do {
+        system("CLS");
+        printf("M E N S T R U T O R I N G\n");
+        printf("=========================\n");
+        printf("1. Monitor\n2. Logout\n[?] ");
+        cmd = getch();
+        switch(cmd) {
+            case '1':
+                printf("\n[!] Masukkan tahun (-1 untuk kembali): ");
+                int tahun;
+                scanf("%d",&tahun);
+                if (tahun < 0) {
+                    continue;
+                } else {
+                    if (tahun < tahunAnc) {
+                        printf("[!] Tahun tidak bisa kurang dari tahun pembuatan (Tahun pembuatan akun: %d)\n", tahunAnc);
+                        system("PAUSE");
+                        continue;
+                    } else {
+                        monitor(tahun);
+                    }
+                }
+                break;
+            default: break;
+        }
+    } while (cmd != '2');
+    return;
+}
+
+void monitor(int tahun) {
+    int cmd;
+    do {
+        system("CLS");
+        printf("M E N S T R U T O R I N G\n");
+        printf("=========================\n");
+        printf("1. Januari\n2. Februari\n3. Maret\n4. April\n5. Mei\n6. Juni\n7. Juli\n8. Agustus\n9. September\n10. Oktober\n11. November\n12. Desember\n0. Kembali\n[?] ");
+        scanf("%d", &cmd);
+
+        if (cmd >= 1 && cmd <= 12) {
+            system("CLS");
+            printCalendar(cmd, tahun);
+            system("PAUSE");
+        }
+    } while (cmd != 0);
 }
