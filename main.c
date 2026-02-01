@@ -53,8 +53,10 @@ void printCalendar(int bulan, int tahun) {
 }
 
 void menu();
+
 void createAccount();
 void Login();
+void forgotPass();
 
 int main () {
     menu();
@@ -69,7 +71,7 @@ void menu() {
         printf("M E N S T R U T O R I N G\n");
         printf("=========================\n");
         if (rf == NULL) {
-            printf("1. Create Account\n2. Exit\n[?] ");
+            printf("1. Buat akun\n2. Exit\n[?] ");
             cmd = getch();
             switch(cmd) {
                 case '1': createAccount(); break;
@@ -77,11 +79,12 @@ void menu() {
                 default: break;
             }
         } else {
-            printf("1. Login\n2. Exit\n[?] ");
+            printf("1. Masuk\n2. Lupa password\n3. Exit\n[?] ");
             cmd = getch();
             switch(cmd) {
-                case '1': Login(); break;
-                case '2': break;
+                case '1': fclose(rf);Login(); break;
+                case '2': fclose(rf);forgotPass(); cmd = '1'; break;
+                case '3': break;
                 default: break;
             }
         }
@@ -91,10 +94,58 @@ void menu() {
 
 void createAccount() {
     system("CLS");
+    printf("[!]Username: ");
+    char usn[21];
+    scanf("%s", usn);
+    printf("[!]Password: ");
+    char pass[21];
+    scanf("%s", pass);
+    printf("[!] Simpan informasi berikut:\nUsername: %s\nPassword: %s\n", usn, pass);
+    FILE *wf = fopen("user.txt", "w");
+    fprintf(wf, "%s#%s", usn, pass);
+    fclose(wf);
     system("PAUSE");
 }
 
 void Login() {
+    int kesempatan = 4;
+    FILE *rf = fopen("user.txt", "r");
+    char username[21], password[21];
+    fscanf(rf, "%[^#]#%s", username, password);
+    while (kesempatan > 0) {
+        system("CLS");
+        printf("[!] Masukkan username: ");
+        char nama[21], pass[21];
+        scanf("%s", nama);
+        printf("[!] Masukkan password: ");
+        scanf("%s", pass);
+        if (strcmp(username, nama) == 0 && strcmp(password, pass) == 0) {
+            printf("[+] Berhasil masuk!\n");
+            fclose(rf);
+
+            system("PAUSE");
+            break;
+        } else {
+            kesempatan--;
+            printf("[-] Password atau username salah!\n[-] %d kesempatan lagi!\n", kesempatan);
+            system("PAUSE");
+        }
+    }
+    fclose(rf);
+    system("PAUSE");
+}
+
+void forgotPass() {
     system("CLS");
+    printf("[!] Masukkan username: ");
+    char nama[21];
+    scanf("%s", nama);
+    char password[21];
+    printf("[!] Masukkan password baru: ");
+    scanf("%s", password);
+    FILE *wf = fopen("user.txt", "w");
+    fprintf(wf, "%s#%s", nama, password);
+    printf("[!] Simpan informasi berikut:\nUsername: %s\nPassword baru: %s\n", nama, password);
+    fclose(wf);
     system("PAUSE");
 }
